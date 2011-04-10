@@ -1,6 +1,6 @@
-     About The Elightenment Project
+     About The Instaware Project
 
-Developed by Thomas Nappo, The Strokefire
+Developed by Thomas Nappo, The Instaware
 project is an effort to improve the modern
 RuneScape server environment.
 
