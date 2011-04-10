@@ -1,0 +1,13 @@
+org.instaware
+org.instaware.core
+org.instaware.core.service
+org.instaware.core.society
+org.instaware.core.society.model
+org.instaware.core.society.model.npcs
+org.instaware.core.society.model.players
+org.instaware.deploy
+org.instaware.network
+org.instaware.network.codec
+org.instaware.network.nexus
+org.instaware.network.nexus.input
+org.instaware.network.nexus.output
