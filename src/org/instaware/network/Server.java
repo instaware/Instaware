@@ -3,7 +3,6 @@ package org.instaware.network;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-import org.instaware.network.codec.PipelineFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;

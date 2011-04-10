@@ -63,7 +63,6 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 				if(revision != REVISION) throw new IOException("Revision mismatch: expected=" + REVISION + " received=" + revision);
 				channel.write(new OutBuffer().addByte((byte) 0).asInput());
 				checkpoint(LoginState.ON_DEMAND);
-				break;
 			}
 			break;
 		case ON_DEMAND:

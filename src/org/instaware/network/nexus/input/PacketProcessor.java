@@ -7,7 +7,7 @@ import org.instaware.network.nexus.InBuffer;
  * <p>Provides interfacing for selective logic
  * performers.</p>
  * 
- * <p>A <tt>Packetprocessor</tt> has the ability
+ * <p>A <tt>PacketProcessor</tt> has the ability
  * to interpret a {@link InBuffer} which encapsulates
  * with the {@link Player} whom sent a process request
  * for the server to handle.</p>

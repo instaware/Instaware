@@ -1,0 +1,46 @@
+package org.instaware.network.codec;
+
+import java.io.IOException;
+
+import org.instaware.network.nexus.*;
+import org.instaware.network.nexus.Buffer.*;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
+
+/**
+ * Encodes individual {@link OutBuffer} units to be streamed
+ * outward to a client.
+ * @see {@link OneToOneEncoder}
+ * @author Thomas Nappo
+ */
+public class Encoder extends OneToOneEncoder {
+
+	@Override
+	protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
+		if (!(msg instanceof OutBuffer)) throw new IOException("Message not instance of output buffer while encoding!");
+		OutBuffer buffer = (OutBuffer) msg;
+		if (!buffer.isBare()) {
+			int packetLength = 1 + buffer.getLength(); // op + packet length
+			
+			Type type = buffer.getType();
+			if (type.equals(Type.VAR_BYTE)) packetLength += 1;
+			else if (type.equals(Type.VAR_SHORT)) packetLength += 2;
+			
+			ChannelBuffer cBuffer = ChannelBuffers.buffer(packetLength);
+			cBuffer.writeByte((byte) buffer.getOpCode());
+			
+			if (type.equals(Type.VAR_BYTE)) cBuffer.writeByte((byte) buffer.getLength());
+			else if (type.equals(Type.VAR_SHORT)) cBuffer.writeShort(buffer.getLength());
+			
+			cBuffer.writeBytes(buffer.getPayload());
+			
+			return cBuffer;
+		}
+		return ChannelBuffers.wrappedBuffer(buffer.getPayload());
+	}
+
+}

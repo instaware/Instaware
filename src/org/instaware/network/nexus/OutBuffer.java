@@ -2,7 +2,8 @@ package org.instaware.network.nexus;
 
 /**
  * Writes data towards a network input stream.
- * @see {@link Buffer}</br>{@link InBuffer}
+ * @see {@link Buffer}
+ * @see {@link InBuffer}
  * @author Thomas Nappo
  */
 public class OutBuffer extends Buffer {
