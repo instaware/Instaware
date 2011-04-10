@@ -1,7 +1,7 @@
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
- Copyright (C) 1989, 1991 Strokefire Project, Inc.,
+ Copyright (C) 1989, 1991 Instaware Project, Inc.,
  53 Broadway, Staten Island, NY 10301 USA
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
@@ -14,7 +14,7 @@ License is intended to guarantee your freedom to share and change free
 software--to make sure the software is free for all its users.  This
 General Public License applies to most of the Free Software
 Foundation's software and to any other program whose authors commit to
-using it.  (Some other Strokefire Project software is covered by
+using it.  (Some other Instaware Project software is covered by
 the GNU Lesser General Public License instead.)  You can apply it to
 your programs, too.
 
@@ -234,7 +234,7 @@ those countries, so that distribution is permitted only in or among
 countries not thus excluded.  In such case, this License incorporates
 the limitation as if written in the body of this License.
 
-  9. The Strokefire Project may publish revised and/or new versions
+  9. The Instaware Project may publish revised and/or new versions
 of the General Public License from time to time.  Such new versions will
 be similar in spirit to the present version, but may differ in detail to
 address new problems or concerns.
@@ -250,7 +250,7 @@ Foundation.
   10. If you wish to incorporate parts of the Program into other free
 programs whose distribution conditions are different, write to the author
 to ask for permission.  For software which is copyrighted by the Free
-Software Foundation, write to the Strokefire Project; we sometimes
+Software Foundation, write to the Instaware Project; we sometimes
 make exceptions for this.  Our decision will be guided by the two goals
 of preserving the free status of all derivatives of our free software and
 of promoting the sharing and reuse of software generally.
@@ -295,7 +295,7 @@ the "copyright" line and a pointer to where the full notice is found.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
-    the Strokefire Project; either version 2 of the License, or
+    the Instaware Project; either version 2 of the License, or
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
@@ -304,7 +304,7 @@ the "copyright" line and a pointer to where the full notice is found.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Strokefire Project, Inc.,
+    with this program; if not, write to the Instaware Project, Inc.,
     53 Broadway, Staten Island, NY 10301 USA.
 
 Also add information on how to contact you by electronic and paper mail.
