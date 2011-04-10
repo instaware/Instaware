@@ -17,7 +17,7 @@ public class OutBuffer extends Buffer {
 	public OutBuffer(int opCode, byte[] payload, boolean bare, Type type) {
 		super(opCode, payload, bare, type);
 	}
-	
+
 	/**
 	 * Constructs a new <tt>OutBuffer</tt>.
 	 * @param opCode The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
@@ -27,7 +27,7 @@ public class OutBuffer extends Buffer {
 	public OutBuffer(int opCode, byte[] payload, boolean bare) {
 		this(opCode, payload, bare, Type.FIXED);
 	}
-	
+
 	/**
 	 * Constructs a new <tt>OutBuffer</tt>.
 	 * @param opCode The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
@@ -37,20 +37,27 @@ public class OutBuffer extends Buffer {
 	public OutBuffer(int opCode, byte[] payload) {
 		this(opCode, payload, false);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>OutBuffer</tt>.
+	 */
+	public OutBuffer() {
+		this(0, null);
+	}
+
 	/**
 	 * The default data capacity.
 	 */
 	public static final int DEFAULT_CAPACITY = 32;
-	
+
 	/**
-	* Current number of bytes used in the buffer.
-	*/
+	 * Current number of bytes used in the buffer.
+	 */
 	private int curLength;
-	
+
 	/**
-	* Bitmasks for <code>addBits()</code>
-	*/
+	 * Bitmasks for <code>addBits()</code>
+	 */
 	private static int bitmasks[] = {
 		0, 0x1, 0x3, 0x7,
 		0xf, 0x1f, 0x3f, 0x7f,
@@ -62,21 +69,21 @@ public class OutBuffer extends Buffer {
 		0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
 		-1
 	};
-	
+
 	/**
-	* Ensures that the buffer is at least <code>minimumBytes</code> bytes.
-	* @param minimumCapacity The size needed
-	*/
+	 * Ensures that the buffer is at least <code>minimumBytes</code> bytes.
+	 * @param minimumCapacity The size needed
+	 */
 	private void ensureCapacity(int minimumCapacity) {
 		if (minimumCapacity >= payload.length)
-		expandCapacity(minimumCapacity);
+			expandCapacity(minimumCapacity);
 	}
-	
+
 	/**
-	* Expands the buffer to the specified size.
-	* @param minimumCapacity The minimum capacity to which to expand
-	* @see java.lang.AbstractStringBuilder#expandCapacity(int)
-	*/
+	 * Expands the buffer to the specified size.
+	 * @param minimumCapacity The minimum capacity to which to expand
+	 * @see java.lang.AbstractStringBuilder#expandCapacity(int)
+	 */
 	private void expandCapacity(int minimumCapacity) {
 		int newCapacity = (payload.length + 1) * 2;
 		if (newCapacity < 0) {
@@ -87,33 +94,33 @@ public class OutBuffer extends Buffer {
 		byte[] newPayload = new byte[newCapacity];
 		try {
 			while(curLength > payload.length)
-			curLength--;
+				curLength--;
 			System.arraycopy(payload, 0, newPayload, 0, curLength);
 		} catch(Exception e) {
-			
+
 		}
 		payload = newPayload;
 	}
-	
+
 	/**
-	* Sets this buffer as bare. A bare buffer will contain only the payload
-	* data, rather than having the standard buffer header prepended.
-	* @param bare Whether this buffer is to be sent bare
-	*/
+	 * Sets this buffer as bare. A bare buffer will contain only the payload
+	 * data, rather than having the standard buffer header prepended.
+	 * @param bare Whether this buffer is to be sent bare
+	 */
 	public OutBuffer setBare(boolean bare) {
 		this.bare = bare;
 		return this;
 	}
-	
+
 	/**
-	* Sets the ID for this buffer.
-	* @param id The ID of the buffer
-	*/
+	 * Sets the ID for this buffer.
+	 * @param id The ID of the buffer
+	 */
 	public OutBuffer setOpCode(int opCode) {
 		this.opCode = opCode;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the size of the buffer builder.
 	 * @param s The new size.
@@ -122,7 +129,7 @@ public class OutBuffer extends Buffer {
 		this.type = type;
 		return this;
 	}
-	
+
 	/**
 	 * Initializes the buffer builders bit access.
 	 * @return
@@ -131,7 +138,7 @@ public class OutBuffer extends Buffer {
 		caret = curLength * 8;
 		return this;
 	}
-	
+
 	/**
 	 * Finishes the buffer builders bit access.
 	 * @return the buffer builder, for chaining.
@@ -140,7 +147,7 @@ public class OutBuffer extends Buffer {
 		curLength = (caret + 7) / 8;
 		return this;
 	}
-	
+
 	/**
 	 * Add bits for building.
 	 * @return the buffer builder, for chaining.
@@ -165,27 +172,27 @@ public class OutBuffer extends Buffer {
 		}
 		return this;
 	}
-	
+
 	/**
-	* Adds the contents of <code>byte</code> array <code>data</code>
-	* to the buffer. The size of this buffer will grow by the length of
-	* the provided array.
-	* @param data The bytes to add to this buffer
-	* @return A reference to this object
-	*/
+	 * Adds the contents of <code>byte</code> array <code>data</code>
+	 * to the buffer. The size of this buffer will grow by the length of
+	 * the provided array.
+	 * @param data The bytes to add to this buffer
+	 * @return A reference to this object
+	 */
 	public OutBuffer addBytes(byte[] data) {
 		return addBytes(data, 0, data.length);
 	}
-	
+
 	/**
-	* Adds the contents of <code>byte</code> array <code>data</code>,
-	* starting at index <code>offset</code>. The size of this buffer will
-	* grow by <code>len</code> bytes.
-	* @param data The bytes to add to this buffer
-	* @param offset The index of the first byte to append
-	* @param len The number of bytes to append
-	* @return A reference to this object
-	*/
+	 * Adds the contents of <code>byte</code> array <code>data</code>,
+	 * starting at index <code>offset</code>. The size of this buffer will
+	 * grow by <code>len</code> bytes.
+	 * @param data The bytes to add to this buffer
+	 * @param offset The index of the first byte to append
+	 * @param len The number of bytes to append
+	 * @return A reference to this object
+	 */
 	public OutBuffer addBytes(byte[] data, int offset, int len) {
 		int newLength = curLength + len;
 		ensureCapacity(newLength);
@@ -193,69 +200,69 @@ public class OutBuffer extends Buffer {
 		curLength = newLength;
 		return this;
 	}
-	
+
 	public OutBuffer addLEShortA(int i) {
 		ensureCapacity(curLength + 2);
 		addByte((byte)(i + 128), false);
 		addByte((byte)(i >> 8), false);
 		return this;
 	}
-	
+
 	public OutBuffer addShortA(int i) {
 		ensureCapacity(curLength + 2);
 		addByte((byte)(i >> 8), false);
 		addByte((byte)(i + 128), false);
 		return this;
 	}
-	
+
 	/**
-	* Adds a <code>byte</code> to the data buffer. The size of this
-	* buffer will grow by one byte.
-	* @param val The <code>byte</code> value to add
-	* @return A reference to this object
-	*/
+	 * Adds a <code>byte</code> to the data buffer. The size of this
+	 * buffer will grow by one byte.
+	 * @param val The <code>byte</code> value to add
+	 * @return A reference to this object
+	 */
 	public OutBuffer addByte(byte val) {
 		return addByte(val, true);
 	}
-	
+
 	public OutBuffer addByteA(int i) {
 		return addByte((byte)(i + 128), true);
 	}
-	
+
 	/**
-	* Adds a <code>byte</code> to the data buffer. The size of this
-	* buffer will grow by one byte.
-	* @param val The <code>byte</code> value to add
-	* @param checkCapacity Whether the buffer capacity should be checked
-	* @return A reference to this object
-	*/
+	 * Adds a <code>byte</code> to the data buffer. The size of this
+	 * buffer will grow by one byte.
+	 * @param val The <code>byte</code> value to add
+	 * @param checkCapacity Whether the buffer capacity should be checked
+	 * @return A reference to this object
+	 */
 	private OutBuffer addByte(byte val, boolean checkCapacity) {
 		if (checkCapacity)
-		ensureCapacity(curLength + 1);
+			ensureCapacity(curLength + 1);
 		payload[curLength++] = val;
 		return this;
 	}
-	
+
 	/**
-	* Adds a <code>short</code> to the data stream. The size of this
-	* buffer will grow by two bytes.
-	* @param val The <code>short</code> value to add
-	* @return A reference to this object
-	*/
+	 * Adds a <code>short</code> to the data stream. The size of this
+	 * buffer will grow by two bytes.
+	 * @param val The <code>short</code> value to add
+	 * @return A reference to this object
+	 */
 	public OutBuffer addShort(int val) {
 		ensureCapacity(curLength + 2);
 		addByte((byte) (val >> 8), false);
 		addByte((byte) val, false);
 		return this;
 	}
-	
+
 	public OutBuffer addLEShort(int val) {
 		ensureCapacity(curLength + 2);
 		addByte((byte) val, false);
 		addByte((byte) (val >> 8), false);
 		return this;
 	}
-	
+
 	public OutBuffer setShort(int val, int offset) {
 		payload[offset++] = (byte) (val >> 8);
 		payload[offset++] = (byte) val;
@@ -264,13 +271,13 @@ public class OutBuffer extends Buffer {
 		}
 		return this;
 	}
-	
+
 	/**
-	* Adds a <code>int</code> to the data stream. The size of this
-	* buffer will grow by four bytes.
-	* @param val The <code>int</code> value to add
-	* @return A reference to this object
-	*/
+	 * Adds a <code>int</code> to the data stream. The size of this
+	 * buffer will grow by four bytes.
+	 * @param val The <code>int</code> value to add
+	 * @return A reference to this object
+	 */
 	public OutBuffer addInt(int val) {
 		ensureCapacity(curLength + 4);
 		addByte((byte) (val >> 24), false);
@@ -279,7 +286,7 @@ public class OutBuffer extends Buffer {
 		addByte((byte) val, false);
 		return this;
 	}
-	
+
 	public OutBuffer addInt1(int val) {
 		ensureCapacity(curLength + 4);
 		addByte((byte) (val >> 8), false);
@@ -288,7 +295,7 @@ public class OutBuffer extends Buffer {
 		addByte((byte) (val >> 16), false);
 		return this;
 	}
-	
+
 	public OutBuffer addInt2(int val) {
 		ensureCapacity(curLength + 4);
 		addByte((byte) (val >> 16), false);
@@ -297,7 +304,7 @@ public class OutBuffer extends Buffer {
 		addByte((byte) (val >> 8), false);
 		return this;
 	}
-	
+
 	public OutBuffer addLEInt(int val) {
 		ensureCapacity(curLength + 4);
 		addByte((byte) val, false);
@@ -306,25 +313,25 @@ public class OutBuffer extends Buffer {
 		addByte((byte) (val >> 24), false);
 		return this;
 	}
-	
+
 	/**
-	* Adds a <code>long</code> to the data stream. The size of this
-	* buffer will grow by eight bytes.
-	* @param val The <code>long</code> value to add
-	* @return A reference to this object
-	*/
+	 * Adds a <code>long</code> to the data stream. The size of this
+	 * buffer will grow by eight bytes.
+	 * @param val The <code>long</code> value to add
+	 * @return A reference to this object
+	 */
 	public OutBuffer addLong(long val) {
 		addInt((int) (val >> 32));
 		addInt((int) (val & -1L));
 		return this;
 	}
-	
+
 	public OutBuffer addLELong(long val) {
 		addLEInt((int) (val & -1L));
 		addLEInt((int) (val >> 32));
 		return this;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public OutBuffer addString(String s) {
 		ensureCapacity(curLength + s.length() + 1);
@@ -333,15 +340,15 @@ public class OutBuffer extends Buffer {
 		payload[curLength++] = 0;
 		return this;
 	}
-	
+
 	public int getLength() {
 		return curLength;
 	}
-	
+
 	/**
-	* Returns a <tt>InBuffer</tt> object for the data contained in this builder.
-	* @return This <tt>OutBuffer</code> converted to an <tt>InBuffer</tt>.
-	*/
+	 * Returns a <tt>InBuffer</tt> object for the data contained in this builder.
+	 * @return This <tt>OutBuffer</code> converted to an <tt>InBuffer</tt>.
+	 */
 	public InBuffer asInput() {
 		byte[] data = new byte[curLength];
 		System.arraycopy(payload, 0, data, 0, curLength);
@@ -352,10 +359,10 @@ public class OutBuffer extends Buffer {
 		addByte((byte) -val);
 		return this;
 	}
-	
+
 	public OutBuffer addByteS(int val) {
 		addByte((byte) (128-val));
 		return this;
 	}
-	
+
 }

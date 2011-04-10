@@ -1,7 +1,11 @@
 package org.instaware.network.codec;
 
+import java.io.IOException;
 
+import org.instaware.core.Global;
 import org.instaware.network.codec.LoginDecoder.LoginState;
+import org.instaware.network.nexus.*;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -13,7 +17,7 @@ import org.jboss.netty.handler.codec.replay.ReplayingDecoder;
  * @author Thomas Nappo
  */
 public class LoginDecoder extends ReplayingDecoder<LoginState> {
-	
+
 	/**
 	 * Represents a state of login request.
 	 * @author Thomas Nappo
@@ -40,6 +44,11 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 
 	}
 
+	/**
+	 * The server revision.
+	 */
+	private static final int REVISION = Global.getProperties().getIntProperty("revision");
+
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer, LoginState state) throws Exception {
 		switch(state) {
@@ -47,11 +56,12 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 			int opCode = buffer.readUnsignedByte();
 			switch(opCode) {
 			case 14: // Login
-				@SuppressWarnings("unused")
-				int revision = buffer.readInt();
 				checkpoint(LoginState.FINISH);
 				break;
 			case 15: // Update
+				int revision = buffer.readInt();
+				if(revision != REVISION) throw new IOException("Revision mismatch: expected=" + REVISION + " received=" + revision);
+				channel.write(new OutBuffer().addByte((byte) 0).asInput());
 				checkpoint(LoginState.ON_DEMAND);
 				break;
 			}

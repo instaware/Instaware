@@ -54,7 +54,7 @@ public abstract class Buffer {
 	 * Retrieves the type of the <tt>Buffer</tt>.
 	 * @return The type of the <tt>Buffer</tt>.
 	 */
-	public Type gettype() {
+	public Type getType() {
 		return type;
 	}
 	

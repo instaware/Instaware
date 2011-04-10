@@ -178,8 +178,7 @@ public class InBuffer extends Buffer {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[op=" + opCode + ",len=" + payload.length + ",data=0x");
-		for(int x = 0; x < payload.length; x++)
-			sb.append(byteToHex(payload[x], true));
+		for(int x = 0; x < payload.length; x++) sb.append(byteToHex(payload[x], true));
 		sb.append("]");
 		return sb.toString();
 	}
