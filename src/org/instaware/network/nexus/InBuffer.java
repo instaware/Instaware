@@ -60,8 +60,7 @@ public class InBuffer extends Buffer {
 	 */
 	public int readLEShortA() {
 		int i = ((payload[caret++] - 128 & 0xff)) + ((payload[caret++] & 0xff) << 8);
-		if(i > 32767)
-			i -= 0x10000;
+		if(i > 32767) i -= 0x10000;
 		return i;
 	}
 	
@@ -71,8 +70,7 @@ public class InBuffer extends Buffer {
 	 */
 	public int readLEShort() {
 		int i = ((payload[caret++] & 0xff)) + ((payload[caret++] & 0xff) << 8);
-		if(i > 32767)
-			i -= 0x10000;
+		if (i > 32767) i -= 0x10000;
 		return i;
 	}
 	
@@ -127,7 +125,7 @@ public class InBuffer extends Buffer {
 	 */
 	public String readRS2String() {
 		int start = caret;
-		while(payload[caret++] != 0) ;
+		while(payload[caret++] != 0);
 		return new String(payload, start, caret - start - 1);
 	}
 	
@@ -138,9 +136,7 @@ public class InBuffer extends Buffer {
 	 * @param len Length of <tt>byte</tt>s to read.
 	 */
 	public void readBytes(byte[] buf, int off, int len) {
-		for(int i=0; i<len; i++) {
-			buf[off+i] = payload[caret++];
-		}
+		for (int i = 0; i < len; i++) buf[off+i] = payload[caret++];
 	}
 	
 	/**
@@ -178,7 +174,7 @@ public class InBuffer extends Buffer {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[op=" + opCode + ",len=" + payload.length + ",data=0x");
-		for(int x = 0; x < payload.length; x++) sb.append(byteToHex(payload[x], true));
+		for (int x = 0; x < payload.length; x++) sb.append(byteToHex(payload[x], true));
 		sb.append("]");
 		return sb.toString();
 	}
@@ -192,8 +188,7 @@ public class InBuffer extends Buffer {
 	private static String byteToHex(byte b, boolean forceLeadingZero) {
 		StringBuilder out = new StringBuilder();
 		int ub = b & 0xff;
-		if(ub / 16 > 0 || forceLeadingZero)
-			out.append(hex[ub / 16]);
+		if (ub / 16 > 0 || forceLeadingZero) out.append(hex[ub / 16]);
 		out.append(hex[ub % 16]);
 		return out.toString();
 	}

@@ -40,10 +40,18 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Constructs a new <tt>OutBuffer</tt>.
+	 * Constructs a new <tt>OutBuffer</tt> with {@link #DEFAULT_CAPACITY}
 	 */
 	public OutBuffer() {
-		this(0, null);
+		this(DEFAULT_CAPACITY);
+	}
+	
+	/**
+	 * Constructs a new <tt>OutBuffer</tt> with no data.
+	 * @param capacity The initial capacity of the buffer.
+	 */
+	public OutBuffer(int capacity) {
+		this(-1, new byte[capacity]);
 	}
 
 	/**
@@ -73,16 +81,15 @@ public class OutBuffer extends Buffer {
 
 	/**
 	 * Ensures that the buffer is at least <code>minimumBytes</code> bytes.
-	 * @param minimumCapacity The size needed
+	 * @param minimumCapacity The size needed.
 	 */
 	private void ensureCapacity(int minimumCapacity) {
-		if (minimumCapacity >= payload.length)
-			expandCapacity(minimumCapacity);
+		if (minimumCapacity >= payload.length) expandCapacity(minimumCapacity);
 	}
 
 	/**
 	 * Expands the buffer to the specified size.
-	 * @param minimumCapacity The minimum capacity to which to expand
+	 * @param minimumCapacity The minimum capacity to which to expand.
 	 * @see java.lang.AbstractStringBuilder#expandCapacity(int)
 	 */
 	private void expandCapacity(int minimumCapacity) {
@@ -94,12 +101,9 @@ public class OutBuffer extends Buffer {
 		}
 		byte[] newPayload = new byte[newCapacity];
 		try {
-			while(curLength > payload.length)
-				curLength--;
+			while (curLength > payload.length) curLength--;
 			System.arraycopy(payload, 0, newPayload, 0, curLength);
-		} catch(Exception e) {
-
-		}
+		} catch(Exception e) {}
 		payload = newPayload;
 	}
 
@@ -160,7 +164,7 @@ public class OutBuffer extends Buffer {
 		curLength = (caret + 7) / 8;
 		ensureCapacity(curLength);
 		for (; numBits > bitOffset; bitOffset = 8) {
-			payload[bytePos] &= ~ bitmasks[bitOffset];	 // mask out the desired area
+			payload[bytePos] &= ~ bitmasks[bitOffset]; // mask out the desired area
 			payload[bytePos++] |= (value >> (numBits - bitOffset)) & bitmasks[bitOffset];	
 			numBits -= bitOffset;
 		}
@@ -175,7 +179,7 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Adds the contents of <code>byte</code> array <code>data</code>
+	 * Adds the contents of <tt>byte</tt> array <code>data</code>
 	 * to the buffer. The size of this buffer will grow by the length of
 	 * the provided array.
 	 * @param data The bytes to add to this buffer
@@ -186,7 +190,7 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Adds the contents of <code>byte</code> array <code>data</code>,
+	 * Adds the contents of <tt>byte</tt> array <code>data</code>,
 	 * starting at index <code>offset</code>. The size of this buffer will
 	 * grow by <code>len</code> bytes.
 	 * @param data The bytes to add to this buffer
@@ -217,9 +221,9 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Adds a <code>byte</code> to the data buffer. The size of this
+	 * Adds a <tt>byte</tt> to the data buffer. The size of this
 	 * buffer will grow by one byte.
-	 * @param val The <code>byte</code> value to add
+	 * @param val The <tt>byte</tt> value to add
 	 * @return A reference to this object
 	 */
 	public OutBuffer addByte(byte val) {
@@ -231,23 +235,22 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Adds a <code>byte</code> to the data buffer. The size of this
+	 * Adds a <tt>byte</tt> to the data buffer. The size of this
 	 * buffer will grow by one byte.
-	 * @param val The <code>byte</code> value to add
+	 * @param val The <tt>byte</tt> value to add
 	 * @param checkCapacity Whether the buffer capacity should be checked
 	 * @return A reference to this object
 	 */
 	private OutBuffer addByte(byte val, boolean checkCapacity) {
-		if (checkCapacity)
-			ensureCapacity(curLength + 1);
+		if (checkCapacity) ensureCapacity(curLength + 1);
 		payload[curLength++] = val;
 		return this;
 	}
 
 	/**
-	 * Adds a <code>short</code> to the data stream. The size of this
+	 * Adds a <tt>short</tt> to the data stream. The size of this
 	 * buffer will grow by two bytes.
-	 * @param val The <code>short</code> value to add
+	 * @param val The <tt>short</tt> value to add
 	 * @return A reference to this object
 	 */
 	public OutBuffer addShort(int val) {
@@ -267,9 +270,7 @@ public class OutBuffer extends Buffer {
 	public OutBuffer setShort(int val, int offset) {
 		payload[offset++] = (byte) (val >> 8);
 		payload[offset++] = (byte) val;
-		if(curLength < offset+2) {
-			curLength += 2;
-		}
+		if(curLength < offset + 2) curLength += 2;
 		return this;
 	}
 
@@ -347,7 +348,7 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Returns a <tt>InBuffer</tt> object for the data contained in this builder.
+	 * Returns a {@link InBuffer} object for the data contained in this builder.
 	 * @return This <tt>OutBuffer</code> converted to an <tt>InBuffer</tt>.
 	 */
 	public InBuffer asInput() {

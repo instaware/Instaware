@@ -57,19 +57,20 @@ public final class DeployFactory {
 	 * Processes the next action according to the state.
 	 */
 	public void next() {
-		switch(state) {
+		switch (state) {
 		case STAND_BY:
 			logger.info("Initializing deployment...");
 			checkpoint(DeployState.CORE_INITIALIZATION);
 			break;
 		case CORE_INITIALIZATION:
 			new Global();
+			Global.loadProperties();
 			logger.info("Completed core initialization.");
 			checkpoint(DeployState.NETWORK_INITIALIZATION);
 			break;
 		case NETWORK_INITIALIZATION:
 			int port = 43594;
-			if(args.length >= 1) if(args[0] != null) port = Integer.parseInt(args[0]);
+			if (args.length >= 1) if(args[0] != null) port = Integer.parseInt(args[0]);
 			new Server().bind(port);
 			logger.info("Completed network initialization.");
 			checkpoint(DeployState.COMPLETED);

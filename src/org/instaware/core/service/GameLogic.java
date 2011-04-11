@@ -139,8 +139,7 @@ public abstract class GameLogic {
 	 * @throws IllegalArgumentException if the delay is not positive.
 	 */
 	private void checkDelay(int delay) {
-		if (delay <= 0)
-			throw new IllegalArgumentException("Delay must be positive.");
+		if (delay <= 0) throw new IllegalArgumentException("Delay must be positive.");
 	}
 
 	/**
@@ -148,8 +147,7 @@ public abstract class GameLogic {
 	 * @throws IllegalStateException if the logic has been stopped.
 	 */
 	private void checkStopped() {
-		if (!running)
-			throw new IllegalStateException();
+		if (!running) throw new IllegalStateException();
 	}
 
 }
