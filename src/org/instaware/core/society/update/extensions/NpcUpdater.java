@@ -5,6 +5,8 @@ import org.instaware.core.society.update.Updater;
 
 /**
  * Performs updating for {@link Npc}.
+ * 
+ * @see {@link Updater}
  * @author Thomas Nappo
  */
 public class NpcUpdater extends Updater<Npc> {

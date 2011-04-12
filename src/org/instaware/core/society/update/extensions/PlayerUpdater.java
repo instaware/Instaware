@@ -5,6 +5,8 @@ import org.instaware.core.society.update.Updater;
 
 /**
  * Performs updating for {@link Player}.
+ * 
+ * @see {@link Updater}
  * @author Thomas Nappo
  */
 public class PlayerUpdater extends Updater<Player> {
