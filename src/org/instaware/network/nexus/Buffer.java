@@ -22,7 +22,7 @@ public abstract class Buffer {
 	/**
 	 * Current read index of the {@link #payload}.
 	 */
-	protected int caret;
+	protected int caret = 0;
 	
 	/**
 	 * Retrieves the current read index of the {@link #payload}
@@ -35,7 +35,7 @@ public abstract class Buffer {
 	/**
 	 * Whether or not this buffer contains the standard header.
 	 */
-	protected boolean bare;
+	protected boolean bare = false;
 	
 	/**
 	 * Retrieves whether or not this buffer is without the standard header.
@@ -48,7 +48,7 @@ public abstract class Buffer {
 	/**
 	 * The type of the <tt>Buffer</tt>.
 	 */
-	protected Type type;
+	protected Type type = Type.FIXED;
 	
 	/**
 	 * Retrieves the type of the <tt>Buffer</tt>.
@@ -123,6 +123,14 @@ public abstract class Buffer {
 	 */
 	public byte[] getPayload() {
 		return payload;
+	}
+	
+	/**
+	 * Retrieves the length of the {@link #payload}.
+	 * @return The length of the payload.
+	 */
+	public int getLength() {
+		return payload.length;
 	}
 
 }

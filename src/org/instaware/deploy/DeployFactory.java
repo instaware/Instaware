@@ -2,6 +2,7 @@ package org.instaware.deploy;
 
 import java.util.logging.Logger;
 
+import org.instaware.Constants;
 import org.instaware.core.Global;
 import org.instaware.network.Server;
 
@@ -69,6 +70,7 @@ public final class DeployFactory {
 			checkpoint(DeployState.NETWORK_INITIALIZATION);
 			break;
 		case NETWORK_INITIALIZATION:
+			Constants.repPacketLengths();
 			int port = 43594;
 			if (args.length >= 1) if(args[0] != null) port = Integer.parseInt(args[0]);
 			new Server().bind(port);
@@ -77,7 +79,7 @@ public final class DeployFactory {
 			break;
 		case COMPLETED:
 			//logger.info("Factory has completed deployment.");
-			logger.info("The Enlightment Project is now ready.");
+			logger.info("Instaware is now ready.");
 			return;
 		default:
 			checkpoint(DeployState.STAND_BY);

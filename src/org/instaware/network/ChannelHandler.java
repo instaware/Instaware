@@ -26,8 +26,13 @@ public class ChannelHandler extends SimpleChannelHandler {
 	}
 	
 	@Override
+    public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+    	logger.info("Channel disconnected: " + ctx.getChannel().getRemoteAddress());
+    }
+	
+	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-		// Eat up the exception.
+		e.getCause().printStackTrace();
 	}
 	
 }

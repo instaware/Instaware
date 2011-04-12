@@ -3,7 +3,6 @@ package org.instaware.network.nexus;
 /**
  * Writes data towards a network input stream.
  * @see {@link Buffer}
- * @see {@link InBuffer}
  * @author Thomas Nappo
  */
 public class OutBuffer extends Buffer {
@@ -57,12 +56,20 @@ public class OutBuffer extends Buffer {
 	/**
 	 * The default data capacity.
 	 */
-	public static final int DEFAULT_CAPACITY = 32;
+	private static final int DEFAULT_CAPACITY = 32;
 
 	/**
 	 * Current number of bytes used in the buffer.
 	 */
-	private int curLength;
+	private int curLength = 0;
+	
+	/**
+	 * Retrieves the current length.
+	 * @return The current length.
+	 */
+	public int getCurLength() {
+		return curLength;
+	}
 
 	/**
 	 * Bitmasks for <code>addBits()</code>
@@ -94,11 +101,8 @@ public class OutBuffer extends Buffer {
 	 */
 	private void expandCapacity(int minimumCapacity) {
 		int newCapacity = (payload.length + 1) * 2;
-		if (newCapacity < 0) {
-			newCapacity = Integer.MAX_VALUE;
-		} else if (minimumCapacity > newCapacity) {
-			newCapacity = minimumCapacity;
-		}
+		if (newCapacity < 0) newCapacity = Integer.MAX_VALUE;
+		else if (minimumCapacity > newCapacity) newCapacity = minimumCapacity;
 		byte[] newPayload = new byte[newCapacity];
 		try {
 			while (curLength > payload.length) curLength--;
@@ -343,13 +347,9 @@ public class OutBuffer extends Buffer {
 		return this;
 	}
 
-	public int getLength() {
-		return curLength;
-	}
-
 	/**
 	 * Returns a {@link InBuffer} object for the data contained in this builder.
-	 * @return This <tt>OutBuffer</code> converted to an <tt>InBuffer</tt>.
+	 * @return This <tt>OutBuffer</tt> converted to an <tt>InBuffer</tt>.
 	 */
 	public InBuffer asInput() {
 		byte[] data = new byte[curLength];

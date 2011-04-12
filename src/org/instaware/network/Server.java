@@ -16,7 +16,7 @@ public class Server {
 	/**
 	 * Bound port of the server.
 	 */
-	private int port;
+	private int port = 43594;
 	
 	/**
 	 * Retrieves the port this server is bound to.

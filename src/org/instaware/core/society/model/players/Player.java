@@ -3,8 +3,9 @@ package org.instaware.core.society.model.players;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.instaware.core.society.model.Mob;
+import org.instaware.core.society.model.*;
 import org.instaware.network.nexus.input.Packet;
+import org.instaware.network.nexus.output.PacketSender;
 
 /**
  * Represents a player character.
@@ -12,6 +13,19 @@ import org.instaware.network.nexus.input.Packet;
  * @author Thomas Nappo
  */
 public class Player extends Mob {
+	
+	/**
+	 * Sends game packets towards the player's client.
+	 */
+	private PacketSender packetSender = new PacketSender(this);
+	
+	/**
+	 * Retrieves the player's {@link PacketSender}.
+	 * @return The player's <tt>PacketSender</tt>.
+	 */
+	public PacketSender getPacketSender() {
+		return packetSender;
+	}
 	
 	/**
 	 * Queues {@link Packet} process requests.

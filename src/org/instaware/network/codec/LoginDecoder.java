@@ -125,6 +125,9 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer, LoginState state) throws Exception {
+		System.out.println("AGAIN!");
+		if (!channel.isConnected() | !buffer.readable() | !ctx.getChannel().isConnected()) return true;
+		System.out.print("state=" + state);
 		switch (state) {
 		case HANDSHAKE:
 			int opCode = buffer.readUnsignedByte();
@@ -132,6 +135,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 			case LOGIN_OPCODE: // Login
 				nameHash = buffer.readUnsignedByte();
 				channel.write(new OutBuffer().addByte((byte) 0).addLong(serverKey = RANDOM.nextLong()).asInput());
+				System.out.println("DONE w/ LOG");
 				checkpoint(LoginState.FINISH);
 				break;
 			case JS5_OPCODE: // Update
@@ -139,15 +143,17 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 				if (revision != REVISION) throw new IOException("Revision mismatch: expected=" + REVISION + " received=" + revision);
 				channel.write(new OutBuffer().addByte((byte) 0).asInput());
 				checkpoint(LoginState.ON_DEMAND);
+				System.out.println("DID WE CHECKPOINT?");
+				break;
 			}
 			break;
 		case ON_DEMAND:
+			System.out.println("WERE HERE.");
 			if (buffer.readableBytes() >= 4) {
 				buffer.skipBytes(4); //this is request bytes
 				OutBuffer response = new OutBuffer();
 				for (int key : Constants.UPDATE_KEYS) response.addByte((byte) key);
 				channel.write(response.asInput()).addListener(ChannelFutureListener.CLOSE);
-				System.out.println("WRITTEN");
 				return true;
 			}
 			break;
@@ -169,7 +175,8 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 						if (rsaHeaderEnc != 10) throw new IOException("Invalid RSA header! received(encoded)=" + rsaHeaderEnc);
 						long clientSessionKey = buffer.readLong();
 						long serverSessionKey = buffer.readLong();
-						if (serverKey != serverSessionKey) throw new IOException("Server key mismatch, received=" + serverSessionKey + " expected=" + serverKey);
+						if (serverKey != serverSessionKey) 
+							throw new IOException("Server key mismatch, received=" + serverSessionKey + " expected=" + serverKey);
 						
 						String username = longToPlayerName(buffer.readLong());
 						String password = readRS2String(buffer);
