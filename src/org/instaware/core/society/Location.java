@@ -16,13 +16,16 @@ package org.instaware.core.society;
  * 
  * <p>While the previous example is easily understood, the height system
  * also has another, very useful attribute. When <a href=http://jagex.com>Jagex</a>
- * coveted a minigame which could take place in one world, two separate games, asynchronously,
+ * coveted an <a href=http://runescape.wikia.com/wiki/Activities>activity</a> which could take place in one world, two separate games, asynchronously,
  * they took advantage of the height system's replication.</p>
  * 
  * <p>The height system only expands 3 height levels (up). After the 3rd height,
  * the system returns a clone of height 0, making it's markway back up to 3 more heights.
  * The system also works with negative heights, however going down a level from height 0 (a clone included)
  * brings you to a height level 3 clone.</p>
+ * 
+ * <p><a href=http://runescape.wikia.com/wiki/TzHaar_Fight_Cave>Tzhaar Fight Caves</a> is an activity which
+ * incorporates this system.</p>
  * 
  * @author Thomas Nappo
  */
