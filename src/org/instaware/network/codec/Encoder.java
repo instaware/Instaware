@@ -21,7 +21,8 @@ public class Encoder extends OneToOneEncoder {
 	
 	@Override
 	protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
-		if (!(msg instanceof InBuffer)) throw new IOException("Message not instance of input buffer while encoding!");
+		if (!(msg instanceof InBuffer)) 
+			throw new IOException("Message not instance of input buffer while encoding!");
 		InBuffer buffer = (InBuffer) msg;
 		if (!buffer.isBare()) {
 			int packetLength = 1 + buffer.getLength(); // op + packet length

@@ -16,7 +16,7 @@ public final class Global {
 	/**
 	 * Used to display data.
 	 */
-	private static final Logger logger = Logger.getLogger(Global.class.getName());
+	public static final Logger logger = Logger.getLogger(Global.class.getName());
 	
 	/**
 	 * Performs logic working for the environment.

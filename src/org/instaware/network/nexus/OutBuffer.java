@@ -109,7 +109,8 @@ public class OutBuffer extends Buffer {
 	/**
 	 * Sets this buffer as bare. A bare buffer will contain only the payload
 	 * data, rather than having the standard buffer header prepended.
-	 * @param bare Whether this buffer is to be sent bare
+	 * @param bare Whether this buffer is to be sent bare.
+	 * @return the buffer builder, for chaining.
 	 */
 	public OutBuffer setBare(boolean bare) {
 		this.bare = bare;
@@ -118,7 +119,8 @@ public class OutBuffer extends Buffer {
 
 	/**
 	 * Sets the ID for this buffer.
-	 * @param id The ID of the buffer
+	 * @param id The ID of the buffer.
+	 * @return the buffer builder, for chaining.
 	 */
 	public OutBuffer setOpCode(int opCode) {
 		this.opCode = opCode;
@@ -126,17 +128,17 @@ public class OutBuffer extends Buffer {
 	}
 
 	/**
-	 * Sets the size of the buffer builder.
-	 * @param s The new size.
+	 * Sets the type of the buffer builder.
+	 * @param type The new type.
 	 */
-	public OutBuffer setSize(Type type) {
+	public OutBuffer setType(Type type) {
 		this.type = type;
 		return this;
 	}
 
 	/**
 	 * Initializes the buffer builders bit access.
-	 * @return
+	 * @return the buffer builder, for chaining.
 	 */
 	public OutBuffer initBitAccess() {
 		caret = curLength * 8;
@@ -349,7 +351,7 @@ public class OutBuffer extends Buffer {
 	public InBuffer asInput() {
 		byte[] data = new byte[curLength];
 		System.arraycopy(payload, 0, data, 0, curLength);
-		return new InBuffer(opCode, data, false, type);//type
+		return new InBuffer(opCode, data, false, type);
 	}
 
 	public OutBuffer addByteC(int val) {

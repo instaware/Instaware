@@ -45,6 +45,30 @@ public class Location {
 		return z;
 	}
 	
+	public int getLocalX() {
+		return x - 8 * (getRegionX() - 6);
+	}
+	
+	public int getLocalY() {
+		return y - 8 * (getRegionY() - 6);
+	}
+	
+	public int getLocalX(Location loc) {
+		return x - 8 * (loc.getRegionX() - 6);
+	}
+	
+	public int getLocalY(Location loc) {
+		return y - 8 * (loc.getRegionY() - 6);
+	}
+	
+	public int getRegionX() {
+		return (x >> 3);
+	}
+	
+	public int getRegionY() {
+		return (y >> 3);
+	}
+	
 	/**
 	 * Constructs a new <tt>Location</tt>.
 	 */

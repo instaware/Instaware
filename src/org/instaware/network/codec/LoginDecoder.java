@@ -2,11 +2,15 @@ package org.instaware.network.codec;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 import org.instaware.Constants;
 import org.instaware.core.Global;
+import org.instaware.core.service.GameLogic;
+import org.instaware.core.society.model.players.*;
 import org.instaware.network.codec.util.BufferUtils;
+import org.instaware.network.codec.util.ReturnCodes;
 import org.instaware.network.nexus.*;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -22,7 +26,7 @@ import org.jboss.netty.handler.codec.replay.ReplayingDecoder;
  */
 @SuppressWarnings("unused")
 public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
-	
+
 	/**
 	 * Represents a state of login request.
 	 * @author Thomas Nappo
@@ -48,7 +52,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 		FINISH;
 
 	}
-	
+
 	/**
 	 * Constructs a new <tt>LoginDecoder</tt>.
 	 */
@@ -56,7 +60,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 		super(false);
 		checkpoint(LoginState.HANDSHAKE);
 	}
-	
+
 	/**
 	 * Secure random generator.
 	 */
@@ -71,14 +75,14 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 	 * Server key of the decoder.
 	 */
 	private long serverKey;
-    
-    /**
-     * Used to display information.
-     */
-    private static final Logger logger = Logger.getLogger(LoginDecoder.class.getName());
+
+	/**
+	 * Used to display information.
+	 */
+	private static final Logger logger = Logger.getLogger(LoginDecoder.class.getName());
 
 	@Override
-	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer, LoginState state) throws Exception {
+	protected Object decode(ChannelHandlerContext ctx, final Channel channel, ChannelBuffer buffer, LoginState state) throws Exception {
 		if (!channel.isConnected() | !buffer.readable() | !ctx.getChannel().isConnected()) return null;
 		switch (state) {
 		case HANDSHAKE:
@@ -87,7 +91,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 			case 15: // Update
 				int revision = buffer.readInt();
 				if (revision != Constants.REVISION) 
-					throw new IOException("Revision mismatch: expected=" + Constants.REVISION + " received=" + revision);
+					throw mismatch("Revision", revision, Constants.REVISION);
 				channel.write(new OutBuffer().addByte((byte) 0).asInput());
 				checkpoint(LoginState.ON_DEMAND);
 				break;
@@ -110,28 +114,63 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 			if (buffer.readableBytes() >= 3) {
 				int connectionType = buffer.readByte() & 0xff;
 				if (connectionType != 16 && connectionType != 18) // 16 = new connection, 18 = reconnection
-					throw new IOException("Unexpected connection type!");
+					throw mismatch("Connection type", connectionType, "16/18");
 				int payloadLength = buffer.readByte() & 0xff;
 				if (payloadLength <= buffer.readableBytes()) {
 					int revision = buffer.readInt();
 					if (revision != Constants.REVISION) 
-						throw new IOException("Revision mismatch: expected=" + Constants.REVISION + " received=" + revision);
+						throw mismatch("Revision", revision, Constants.REVISION);
+					
 					boolean lowMemoryVersion = buffer.readByte() == 1;
+					
 					buffer.skipBytes(24);
 					for (int n = 0; n < 16; n++) buffer.readInt();
+					
 					int rsaHeader = buffer.readByte();
 					if (rsaHeader != 10) {
 						int rsaHeaderEnc = buffer.readByte() & 0xff; // Now hopefully we get 10.
-						if (rsaHeaderEnc != 10) throw new IOException("Invalid RSA header! received(encoded)=" + rsaHeaderEnc);
-						long clientSessionKey = buffer.readLong();
-						long serverSessionKey = buffer.readLong();
-						if (serverKey != serverSessionKey) 
-							throw new IOException("Server key mismatch, received=" + serverSessionKey + " expected=" + serverKey);
-						
-						String username = BufferUtils.longToPlayerName(buffer.readLong());
-						String password = BufferUtils.readRS2String(buffer);
-						
-						logger.info("Login request: " + username + ", " + password);
+						if (rsaHeaderEnc != 10) throw mismatch("RSA header", rsaHeaderEnc, 10);
+					}
+					
+					long clientSessionKey = buffer.readLong();
+					long serverSessionKey = buffer.readLong();
+					if (serverKey != serverSessionKey) 
+						throw mismatch("Server key", serverSessionKey, serverKey);
+
+					String username = BufferUtils.longToPlayerName(buffer.readLong());
+					String password = BufferUtils.readRS2String(buffer);
+					
+					final Player player = new Player(1, new PlayerDetails(channel, username, password));
+					
+					int returnCode = ReturnCodes.LOGIN;
+					
+					// Generate return code.
+					
+					final OutBuffer loginBlock = new OutBuffer().setBare(true);
+					loginBlock.addByte((byte) returnCode); // return code
+					
+					if (returnCode == ReturnCodes.LOGIN) {
+						Global.getWorker().schedule(new GameLogic() {
+
+							@Override
+							public void execute() {
+								loginBlock.addByte((byte) 0); // crown
+								loginBlock.addByte((byte) 1);
+								loginBlock.addShort(1); // index
+								loginBlock.addByte((byte) 0);
+								loginBlock.addByte((byte) 0);
+								
+								player.getChannel().write(loginBlock.asInput());
+								
+								player.getPacketSender().sendLogin();
+								
+								logger.info("Login completed: " + player);
+								
+								this.stop();
+							}
+						});
+					} else {
+						player.getChannel().write(loginBlock.asInput());
 					}
 				}
 				return true;
@@ -139,6 +178,13 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 			break;
 		}
 		return true;
+	}
+	
+	/**
+	 * Creates a new {@link IOException} which refers to mismatching data.
+	 */
+	private IOException mismatch(String info, Object rec, Object exp) {
+		return new IOException(info + " mismatch: received=" + rec + " expected=" + exp);
 	}
 
 }

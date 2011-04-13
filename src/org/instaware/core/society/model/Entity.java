@@ -39,7 +39,7 @@ public abstract class Entity {
 	/**
 	 * Index identification.
 	 */
-	protected int index;
+	protected int index = 0;
 	
 	/**
 	 * Constructs a new entity.
