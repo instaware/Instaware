@@ -37,26 +37,21 @@ public class OutBuffer extends Buffer {
 	public OutBuffer(int opCode, byte[] payload) {
 		this(opCode, payload, false);
 	}
-
+	
 	/**
-	 * Constructs a new <tt>OutBuffer</tt> with {@link #DEFAULT_CAPACITY}
+	 * Constructs a new <tt>OutBuffer</tt>.
+	 * @param opCode  The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
 	 */
-	public OutBuffer() {
-		this(DEFAULT_CAPACITY);
+	public OutBuffer(int opCode) {
+		super(opCode);
 	}
 	
 	/**
-	 * Constructs a new <tt>OutBuffer</tt> with no data.
-	 * @param capacity The initial capacity of the buffer.
+	 * Constructs a new <tt>OutBuffer</tt>.
 	 */
-	public OutBuffer(int capacity) {
-		this(-1, new byte[capacity]);
+	public OutBuffer() {
+		super();
 	}
-
-	/**
-	 * The default data capacity.
-	 */
-	private static final int DEFAULT_CAPACITY = 32;
 
 	/**
 	 * Current number of bytes used in the buffer.
@@ -354,7 +349,7 @@ public class OutBuffer extends Buffer {
 	public InBuffer asInput() {
 		byte[] data = new byte[curLength];
 		System.arraycopy(payload, 0, data, 0, curLength);
-		return new InBuffer(opCode, data, false, type);
+		return new InBuffer(opCode, data, false, type);//type
 	}
 
 	public OutBuffer addByteC(int val) {

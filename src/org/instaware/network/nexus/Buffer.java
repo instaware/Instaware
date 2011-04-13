@@ -7,6 +7,11 @@ package org.instaware.network.nexus;
 public abstract class Buffer {
 	
 	/**
+	 * The default data capacity.
+	 */
+	protected static final int DEFAULT_CAPACITY = 32;
+	
+	/**
 	 * The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
 	 */
 	protected int opCode = -1;
@@ -89,7 +94,7 @@ public abstract class Buffer {
 	 */
 	public Buffer(int opCode, byte[] payload, boolean bare, Type type) {
 		this.opCode = opCode; this.payload = payload;
-		this.bare = bare; this.type = type;
+		this.bare = (opCode == -1); this.type = type;
 	}
 	
 	/**
@@ -106,10 +111,24 @@ public abstract class Buffer {
 	 * Constructs a new <tt>Buffer</tt>.
 	 * @param opCode The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
 	 * @param payload Control information data which is contained.
-	 * @param bare Whether or not this buffer contains the standard header.
 	 */
 	public Buffer(int opCode, byte[] payload) {
 		this(opCode, payload, false);
+	}
+	
+	/**
+	 * Constructs a new <tt>Buffer</tt>.
+	 * @param opCode  The <a href=http://en.wikipedia.org/wiki/Opcode>operation code</a> of the data buffer.
+	 */
+	public Buffer(int opCode) {
+		this(opCode, new byte[DEFAULT_CAPACITY]);
+	}
+	
+	/**
+	 * Constructs a new <tt>Buffer</tt>.
+	 */
+	public Buffer() {
+		this(-1);
 	}
 	
 	/**

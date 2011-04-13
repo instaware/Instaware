@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.instaware.Constants;
 import org.instaware.core.Global;
-import org.instaware.network.codec.LoginDecoder.LoginState;
+import org.instaware.network.codec.util.BufferUtils;
 import org.instaware.network.nexus.*;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -21,13 +21,13 @@ import org.jboss.netty.handler.codec.replay.ReplayingDecoder;
  * @author Thomas Nappo
  */
 @SuppressWarnings("unused")
-public class LoginDecoder extends ReplayingDecoder<LoginState> {
-
+public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
+	
 	/**
 	 * Represents a state of login request.
 	 * @author Thomas Nappo
 	 */
-	public enum LoginState {
+	public static enum LoginState {
 
 		/**
 		 * Represents a login stage where the handshake between server & client is done.
@@ -56,16 +56,6 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 		super(false);
 		checkpoint(LoginState.HANDSHAKE);
 	}
-
-	/**
-	 * The server revision.
-	 */
-	private static final int REVISION = Global.getProperties().getIntProperty("revision");
-	
-	/**
-	 * Handshake op codes.
-	 */
-	public static final int JS5_OPCODE = 15, LOGIN_OPCODE = 14;
 	
 	/**
 	 * Secure random generator.
@@ -81,42 +71,6 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 	 * Server key of the decoder.
 	 */
 	private long serverKey;
-	
-	private String readRS2String(ChannelBuffer buffer) {
-		StringBuilder sb = new StringBuilder();
-		byte b;
-		while ((b = buffer.readByte()) != 0) {
-			sb.append((char) b);
-		}
-		return sb.toString();
-	}
-
-	private String longToPlayerName(long l) {
-		if (l <= 0L || l >= 0x5b5b57f8a98a5dd1L) {
-			return null;
-		}
-		if (l % 37L == 0L) {
-			return null;
-		}
-		int i = 0;
-		char ac[] = new char[12];
-		while (l != 0L) {
-			long l1 = l;
-			l /= 37L;
-			ac[11 - i++] = VALID_CHARS[(int)(l1 - l * 37L)];
-		}
-		return new String(ac, 12 - i, i);
-	}
-	
-    /**
-     * Valid character literals.
-     */
-    public static final char[] VALID_CHARS = {
-    	'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-    	'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-    	't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2',
-    	'3', '4', '5', '6', '7', '8', '9'
-    };
     
     /**
      * Used to display information.
@@ -125,36 +79,31 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer, LoginState state) throws Exception {
-		System.out.println("AGAIN!");
-		if (!channel.isConnected() | !buffer.readable() | !ctx.getChannel().isConnected()) return true;
-		System.out.print("state=" + state);
+		if (!channel.isConnected() | !buffer.readable() | !ctx.getChannel().isConnected()) return null;
 		switch (state) {
 		case HANDSHAKE:
 			int opCode = buffer.readUnsignedByte();
 			switch (opCode) {
-			case LOGIN_OPCODE: // Login
-				nameHash = buffer.readUnsignedByte();
-				channel.write(new OutBuffer().addByte((byte) 0).addLong(serverKey = RANDOM.nextLong()).asInput());
-				System.out.println("DONE w/ LOG");
-				checkpoint(LoginState.FINISH);
-				break;
-			case JS5_OPCODE: // Update
+			case 15: // Update
 				int revision = buffer.readInt();
-				if (revision != REVISION) throw new IOException("Revision mismatch: expected=" + REVISION + " received=" + revision);
+				if (revision != Constants.REVISION) 
+					throw new IOException("Revision mismatch: expected=" + Constants.REVISION + " received=" + revision);
 				channel.write(new OutBuffer().addByte((byte) 0).asInput());
 				checkpoint(LoginState.ON_DEMAND);
-				System.out.println("DID WE CHECKPOINT?");
+				break;
+			case 14: // Login
+				nameHash = buffer.readUnsignedByte();
+				channel.write(new OutBuffer().addByte((byte) 0).addLong(serverKey = RANDOM.nextLong()).asInput());
+				checkpoint(LoginState.FINISH);
 				break;
 			}
 			break;
 		case ON_DEMAND:
-			System.out.println("WERE HERE.");
 			if (buffer.readableBytes() >= 4) {
 				buffer.skipBytes(4); //this is request bytes
 				OutBuffer response = new OutBuffer();
 				for (int key : Constants.UPDATE_KEYS) response.addByte((byte) key);
 				channel.write(response.asInput()).addListener(ChannelFutureListener.CLOSE);
-				return true;
 			}
 			break;
 		case FINISH:
@@ -165,7 +114,8 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 				int payloadLength = buffer.readByte() & 0xff;
 				if (payloadLength <= buffer.readableBytes()) {
 					int revision = buffer.readInt();
-					if (revision != REVISION) throw new IOException("Revision mismatch: expected=" + REVISION + " received=" + revision);
+					if (revision != Constants.REVISION) 
+						throw new IOException("Revision mismatch: expected=" + Constants.REVISION + " received=" + revision);
 					boolean lowMemoryVersion = buffer.readByte() == 1;
 					buffer.skipBytes(24);
 					for (int n = 0; n < 16; n++) buffer.readInt();
@@ -178,8 +128,8 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 						if (serverKey != serverSessionKey) 
 							throw new IOException("Server key mismatch, received=" + serverSessionKey + " expected=" + serverKey);
 						
-						String username = longToPlayerName(buffer.readLong());
-						String password = readRS2String(buffer);
+						String username = BufferUtils.longToPlayerName(buffer.readLong());
+						String password = BufferUtils.readRS2String(buffer);
 						
 						logger.info("Login request: " + username + ", " + password);
 					}
@@ -188,7 +138,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginState> {
 			}
 			break;
 		}
-		return null;
+		return true;
 	}
 
 }

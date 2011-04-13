@@ -1,6 +1,13 @@
 package org.instaware;
 
+import org.instaware.core.Global;
+
 public final class Constants {
+	
+	/**
+	 * The <a href=http://runescape.com>RuneScape</a> revision of the server.
+	 */
+	public static final int REVISION = Global.getProperties().getIntProperty("revision");
 	
 	/**
 	 * Lengths which match operation code.
@@ -9,6 +16,7 @@ public final class Constants {
 	
 	/**
 	 * Replaces incoming packet lengths.
+	 * @author 'Mystic flow <Steven@rune-server.org>
 	 */
 	public static void repPacketLengths() {
 		PACKET_LENGTHS =  new int[] {
@@ -50,16 +58,16 @@ public final class Constants {
 		PACKET_LENGTHS[173] = 8;
 		PACKET_LENGTHS[171] = 4;
 		PACKET_LENGTHS[123] = 2;
-		PACKET_LENGTHS[24] = 5;//
+		PACKET_LENGTHS[24] = 5;
 		PACKET_LENGTHS[121] = 2;
 		PACKET_LENGTHS[88] = 12;
 		PACKET_LENGTHS[191] = 6;
-		PACKET_LENGTHS[61] = 16;//
-		PACKET_LENGTHS[2] = 2;//
-		PACKET_LENGTHS[12] = 2;//
+		PACKET_LENGTHS[61] = 16;
+		PACKET_LENGTHS[2] = 2;
+		PACKET_LENGTHS[12] = 2;
 		PACKET_LENGTHS[180] = 6;
 		PACKET_LENGTHS[144] = 9;
-		PACKET_LENGTHS[10] = 9;//
+		PACKET_LENGTHS[10] = 9;
 		PACKET_LENGTHS[122] = 7;
 		PACKET_LENGTHS[25] = 2;
 		PACKET_LENGTHS[238] = 8;
@@ -74,24 +82,27 @@ public final class Constants {
 		PACKET_LENGTHS[158] = 6;//Option - 10
 		PACKET_LENGTHS[84] = 6;//Option - all
 		PACKET_LENGTHS[203] = 6;//Option - x
-		PACKET_LENGTHS[21] = 6;//Value//
+		PACKET_LENGTHS[21] = 6;//Value
 		PACKET_LENGTHS[234] = 6;//Lend
-		PACKET_LENGTHS[22] = 6;//Examine packet//
+		PACKET_LENGTHS[22] = 6;//Examine packet
 	}
 	
 	/**
 	 * Keys sent to notify the client we are in the update state.
+	 * @author Leanbow12
 	 */
 	public static final int[] UPDATE_KEYS = {
-		0xff, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x80, 0xca, 0x55, 0xa6, 0x13, 0x00, 0x00, 0x00, 0x00,
-		0xfa, 0xc8, 0x8e, 0xfb, 0x00, 0x00, 0x00, 0x00, 0x49, 0x64, 0x82, 0x37, 0x00, 0x00, 0x00, 0x00,
-		0x53, 0x4d, 0x7c, 0x27, 0x00, 0x00, 0x00, 0x00, 0xa6, 0xfc, 0xcc, 0x2b, 0x00, 0x00, 0x00, 0x00,
-		0x23, 0xd5, 0x3a, 0x55, 0x00, 0x00, 0x00, 0x00, 0xa2, 0xc4, 0x23, 0x06, 0x00, 0x00, 0x00, 0x00,
-		0xef, 0x3f, 0xef, 0x2a, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x88, 0x71, 0x7c, 0x00, 0x00, 0x00, 0x00,
-		0xec, 0x28, 0x71, 0x7c, 0x00, 0x00, 0x00, 0x00, 0x14, 0x8f, 0x6f, 0x5e, 0x00, 0x00, 0x00, 0x00,
-		0x74, 0x14, 0x8a, 0x05, 0x00, 0x00, 0x00, 0x00, 0x6e, 0x66, 0xfa, 0x6e, 0x00, 0x00, 0x00, 0x00,
-		0x07, 0x8e, 0x6a, 0x3e, 0x00, 0x00, 0x00, 0x00, 0xa3, 0x8c, 0xf6, 0x94, 0x00, 0x00, 0x00, 0x00,
-		0xb8, 0xf2, 0x4d, 0x21, 0x00, 0x00, 0x00, 0x00
+		-1, 0, -1, 0, 0, 0, 0, -128, -54, 85,
+		-90, 19, 0, 0, 0, 41, -6, -56, -114, -5,
+		0, 0, 0, 25, 73, 100, -126, 55, 0, 0, 2,
+		3, 83, 77, 124, 39, 0, 0, 0, -58, -90, -4,
+		-52, 43, 0, 0, 0, 51, 35, -43, 58, 85, 0, 0,
+		0, -109, -94, -60, 35, 6, 0, 0, 0, 0, -17, 63,
+		-17, 42, 0, 0, 0, -43, -32, -120, 113, 124, 0,
+		0, 0, 48, -20, 40, 113, 124, 0, 0, 0, 41, 20, -113,
+		111, 94, 0, 0, 0, 1, 116, 20, -118, 5, 0, 0, 0, 0, 110,
+		102, -6, 110, 0, 0, 0, -121, 7, -114, 106, 62, 0, 0, 0, 1,
+		-93, -116, -10, -108, 0, 0, 0, 1, -72, -14, 77, 33, 0, 0, 0, 0
 	};
 
 }
