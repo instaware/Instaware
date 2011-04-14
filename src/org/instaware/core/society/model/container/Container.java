@@ -29,8 +29,6 @@ public abstract class Container {
 		put(nextOpenSlot(), item);
 	}
 	
-	
-	
 	/**
 	 * Retrieves the next open slot.
 	 * @return The next open slot id.
