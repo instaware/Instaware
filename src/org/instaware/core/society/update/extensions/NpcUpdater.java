@@ -1,5 +1,6 @@
 package org.instaware.core.society.update.extensions;
 
+import org.instaware.core.Global;
 import org.instaware.core.society.model.npcs.*;
 import org.instaware.core.society.update.Updater;
 
@@ -12,19 +13,12 @@ import org.instaware.core.society.update.Updater;
 public class NpcUpdater extends Updater<Npc> {
 
 	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void updateAll() {
-		// TODO Auto-generated method stub
-		
+		for (Npc n : Global.getWorld().getNpcs()) update(n);
 	}
 
 	@Override
-	public void update(Npc t) {
+	public void update(Npc n) {
 		// TODO Auto-generated method stub
 		
 	}

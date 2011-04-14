@@ -39,6 +39,14 @@ public class Player extends Mob {
 	}
 	
 	/**
+	 * Checks whether or not the player's channel is connected.
+	 * @return <tt>true</tt> if the player's channel is connected.
+	 */
+	public boolean isConnected() {
+		return getChannel().isConnected();
+	}
+	
+	/**
 	 * Sends game packets towards the player's client.
 	 */
 	private PacketSender packetSender = new PacketSender(this);

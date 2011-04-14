@@ -13,7 +13,7 @@ public final class Loader {
 	 * @param args The program arguments.
 	 */
 	public static void main(String[] args) {
-		new DeployFactory().start(args);
+		new DeployFactory().start();
 	}
 
 }

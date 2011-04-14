@@ -154,17 +154,17 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 
 							@Override
 							public void execute() {
-								loginBlock.addByte((byte) 0); // crown
-								loginBlock.addByte((byte) 1);
-								loginBlock.addShort(1); // index
-								loginBlock.addByte((byte) 0);
-								loginBlock.addByte((byte) 0);
+								if (Global.getWorld().register(player)) {
+									loginBlock.addByte((byte) 0); // crown
+									loginBlock.addByte((byte) 1);
+									loginBlock.addShort(player.getIndex()); // index
+									loginBlock.addByte((byte) 0);
+									loginBlock.addByte((byte) 0);
+								}
 								
 								player.getChannel().write(loginBlock.asInput());
 								
 								player.getPacketSender().sendLogin();
-								
-								logger.info("Login completed: " + player);
 								
 								this.stop();
 							}

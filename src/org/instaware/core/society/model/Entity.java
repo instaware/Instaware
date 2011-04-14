@@ -42,6 +42,23 @@ public abstract class Entity {
 	protected int index = 0;
 	
 	/**
+	 * Gets this <tt>Entity</tt>'s index identification.
+	 * @return This <tt>Entity</tt>'s index identification.
+	 */
+	public int getIndex() {
+		return index;
+	}
+	
+	/**
+	 * Sets this <tt>Entity</tt>'s index identification.
+	 * @param index The new index.
+	 * @return This <tt>Entity</tt>.
+	 */
+	public Entity setIndex(int index) {
+		this.index = index; return this;
+	}
+	
+	/**
 	 * Constructs a new entity.
 	 * @param index The index identification.
 	 */

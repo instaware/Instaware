@@ -39,17 +39,10 @@ public final class DeployFactory {
 	}
 	
 	/**
-	 * Acquired deployment arguments.
-	 */
-	private String[] args = new String[1];
-	
-	/**
 	 * Creates and launches new deployment.
-	 * @param args The deployment arguments.
 	 * @return The finished <tt>DeployFactory</tt>.
 	 */
-	public DeployFactory start(String[] args) {
-		this.args = args;
+	public DeployFactory start() {
 		next();
 		return this;
 	}
@@ -71,15 +64,12 @@ public final class DeployFactory {
 			break;
 		case NETWORK_INITIALIZATION:
 			Constants.repPacketLengths();
-			int port = 43594;
-			if (args.length >= 1) if(args[0] != null) port = Integer.parseInt(args[0]);
-			new Server().bind(port);
+			new Server().bind(Global.getProperties().getIntProperty("port"));
 			logger.info("Completed network initialization.");
 			checkpoint(DeployState.COMPLETED);
 			break;
 		case COMPLETED:
-			//logger.info("Factory has completed deployment.");
-			logger.info("Instaware is now ready.");
+			logger.info("Factory has completed deployment.");
 			return;
 		default:
 			checkpoint(DeployState.STAND_BY);

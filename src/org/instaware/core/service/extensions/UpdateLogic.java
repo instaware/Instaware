@@ -1,5 +1,6 @@
 package org.instaware.core.service.extensions;
 
+import org.instaware.core.Global;
 import org.instaware.core.service.GameLogic;
 import org.instaware.core.society.model.Entity;
 
@@ -16,8 +17,8 @@ public class UpdateLogic extends GameLogic {
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
-		
+		Global.getWorld().getPlayerUpdater().updateAll();
+		Global.getWorld().getNpcUpdater().updateAll();
 	}
 
 }

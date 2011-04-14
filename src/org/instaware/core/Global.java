@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.instaware.core.service.GameWorker;
+import org.instaware.core.society.model.World;
 
 /**
  * Encapsulates global (environment) attributes.
@@ -21,14 +22,27 @@ public final class Global {
 	/**
 	 * Performs logic working for the environment.
 	 */
-	private static GameWorker worker = new GameWorker();
+	private static final GameWorker worker = new GameWorker();
 	
 	/**
-	 * Gets the global logic worker.
+	 * Retrieves the global logic worker.
 	 * @return The global logic worker.
 	 */
 	public static GameWorker getWorker() {
 		return worker;
+	}
+	
+	/**
+	 * Manages global game attributes and encapsulations.
+	 */
+	private static final World world = new World();
+	
+	/**
+	 * Retrieves the global world.
+	 * @return The global world.
+	 */
+	public static World getWorld() {
+		return world;
 	}
 	
 	/**

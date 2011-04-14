@@ -6,7 +6,7 @@ import org.instaware.core.society.model.Entity;
  * Provides the blueprints for an {@link Entity} updater.
  * @author Thomas Nappo
  */
-public abstract class Updater<T extends Entity> implements Runnable {
+public abstract class Updater<T extends Entity> {
 
 	/**
 	 * Updates all entities of the type.

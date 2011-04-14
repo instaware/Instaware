@@ -1,5 +1,6 @@
 package org.instaware.core.society.update.extensions;
 
+import org.instaware.core.Global;
 import org.instaware.core.society.model.players.*;
 import org.instaware.core.society.update.Updater;
 
@@ -12,21 +13,19 @@ import org.instaware.core.society.update.Updater;
 public class PlayerUpdater extends Updater<Player> {
 
 	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void updateAll() {
-		// TODO Auto-generated method stub
-		
+		for (Player p : Global.getWorld().getPlayers()) {
+			if (!p.isConnected()) {
+				Global.getWorld().unregister(p);
+				continue;
+			}
+			update(p);
+		}
 	}
 
 	@Override
-	public void update(Player t) {
-		// TODO Auto-generated method stub
-		
+	public void update(Player p) {
+		System.out.println("Updated player: " + p);
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.instaware.network.nexus.output;
 
+import org.instaware.core.Global;
 import org.instaware.core.society.model.players.Player;
 import org.instaware.network.nexus.OutBuffer;
 
@@ -32,9 +33,7 @@ public class PacketSender extends OutBuffer {
 		sendMapRegion();
 		sendWindowPane(548);
 		sendTabs();
-		String name = player.getDetails().getUsername();
-		String f = name.substring(0, 1).toUpperCase();
-		sendMessage("Welcome to Instaware, " + name.replaceAll(name.substring(0, 1), f)+ ".");
+		sendMessage("Welcome to " + Global.getProperties().getProperty("game_name"));
 	}
 	
 	/**
