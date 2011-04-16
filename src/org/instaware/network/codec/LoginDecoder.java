@@ -9,6 +9,7 @@ import org.instaware.Constants;
 import org.instaware.core.Global;
 import org.instaware.core.service.GameLogic;
 import org.instaware.core.society.model.players.*;
+import org.instaware.core.society.model.players.Player.Right;
 import org.instaware.network.codec.util.BufferUtils;
 import org.instaware.network.codec.util.ReturnCodes;
 import org.instaware.network.nexus.*;
@@ -146,6 +147,8 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 					
 					// Generate return code.
 					
+					if (player.getRight().equals(Right.BANNED)) returnCode = ReturnCodes.BANNED;
+					
 					final OutBuffer loginBlock = new OutBuffer().setBare(true);
 					loginBlock.addByte((byte) returnCode); // return code
 					
@@ -155,7 +158,7 @@ public class LoginDecoder extends ReplayingDecoder<LoginDecoder.LoginState> {
 							@Override
 							public void execute() {
 								if (Global.getWorld().register(player)) {
-									loginBlock.addByte((byte) 0); // crown
+									loginBlock.addByte((byte) player.getRight().getCrown()); // crown
 									loginBlock.addByte((byte) 1);
 									loginBlock.addShort(player.getIndex()); // index
 									loginBlock.addByte((byte) 0);

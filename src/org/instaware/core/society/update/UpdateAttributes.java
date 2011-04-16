@@ -3,7 +3,7 @@ package org.instaware.core.society.update;
 import org.instaware.core.society.model.*;
 
 /**
- * Elists {@link UpdateFlag}-fullfilling attributes.
+ * Enlists {@link UpdateFlag}-fullfilling attributes.
  * @author Thomas Nappo
  */
 public class UpdateAttributes {
@@ -24,6 +24,12 @@ public class UpdateAttributes {
 	
 	public ChatMessage getMessage() {
 		return message;
+	}
+	
+	private ChatMessage forceMessage;
+	
+	public ChatMessage getForceMessage() {
+		return forceMessage;
 	}
 
 }

@@ -16,12 +16,38 @@ import org.jboss.netty.channel.Channel;
 public class Player extends Mob {
 	
 	/**
+	 * Manages the player's on screen {@link Mob}s.
+	 */
+	private OnScreenManager osManager = new OnScreenManager();
+	
+	/**
+	 * Retrieves the player's on screen manager.
+	 * @return The player's {@link OnScreenManager}.
+	 */
+	public OnScreenManager getOSManager() {
+		return osManager;
+	}
+	
+	/**
+	 * Represents the appearance of the player.
+	 */
+	private Appearance appearance = new Appearance();
+	
+	/**
+	 * Retrieves the player's appearance.
+	 * @return The player's appearance.
+	 */
+	public Appearance getAppearance() {
+		return appearance;
+	}
+	
+	/**
 	 * The player's connection details.
 	 */
 	private PlayerDetails details = null;
 	
 	/**
-	 * Gets the player's connection details.
+	 * Retrieves the player's connection details.
 	 * @return A {@link PlayerDetails} object, which encapsulates
 	 * this player's connection attrbutes.
 	 */
@@ -70,6 +96,88 @@ public class Player extends Mob {
 	 */
 	public Deque<Packet> getNetQueue() {
 		return networkQueue;
+	}
+	
+	/**
+	 * The player's {@link Right} level.
+	 */
+	private Right right = Right.STANDARD;
+	
+	/**
+	 * Retrieves the player's right level.
+	 * @return The player's {@link Right} level.
+	 */
+	public Right getRight() {
+		return right;
+	}
+	
+	/**
+	 * Represents a user's player rights.
+	 * @author Thomas Nappo
+	 */
+	public static enum Right {
+		
+		/**
+		 * Right in which the user cannot connect
+		 * to the server.
+		 */
+		BANNED(-2),
+		
+		/**
+		 * Right in which the user cannot use any
+		 * chat channels.
+		 */
+		MUTED(-1),
+		
+		/**
+		 * Standard user rights.
+		 */
+		STANDARD(0),
+		
+		/**
+		 * Standard user rights, with some varying
+		 * exceptions.
+		 */
+		MODERATOR(1),
+		
+		/**
+		 * Administrative user rights, which includes
+		 * powerful access.
+		 */
+		ADMINISTRATOR(2);
+		
+		/**
+		 * Power value.
+		 */
+		private int val;
+		
+		/**
+		 * Converts the right to it's power value.
+		 * @return The right to it's power value.
+		 */
+		public int toInteger() {
+			return val;
+		}
+		
+		/**
+		 * Retrieves the right's representative
+		 * crown code id.
+		 * @return The right's crown id.
+		 */
+		public int getCrown() {
+			if (val < 1) return 0;
+			if (val > 2) return 2;
+			return val;
+		}
+		
+		/**
+		 * Constructs a new right.
+		 * @param val The power value of the right.
+		 */
+		Right(int val) {
+			this.val = val;
+		}
+		
 	}
 
 	/**
